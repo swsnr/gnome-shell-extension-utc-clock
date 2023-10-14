@@ -94,7 +94,7 @@ export default class UTCClockExtension extends Extension {
       // Restore the original label
       this.originalLabel.set_width(-1);
       Main.panel.statusArea.dateMenu.label_actor = this.originalLabel;
-      // Destore our custom label
+      // Destroy our custom label
       this.customLabel.destroy();
       this.customLabel = null;
     }
