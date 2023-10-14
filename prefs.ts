@@ -45,12 +45,10 @@ export default class UTCClockPreferences extends ExtensionPreferences {
   }
 
   override fillPreferencesWindow(
-    // eslint-disable-next-line functional/prefer-immutable-types
     window: Adw.PreferencesWindow & TracksSettings,
   ): void {
     // Create a settings object and bind the row to our key.
     // Attach the settings object to the window to keep it alive while the window is alive.
-    // eslint-disable-next-line functional/immutable-data
     window._settings = this.getSettings();
 
     const settingsPage = new Adw.PreferencesPage({
@@ -83,7 +81,6 @@ export default class UTCClockPreferences extends ExtensionPreferences {
 
     const aboutUI = this.loadUI("about.ui");
     const aboutWidget = aboutUI?.get_object("about");
-    // eslint-disable-next-line functional/no-conditional-statements
     if (aboutWidget) {
       aboutGroup.add(aboutWidget as Gtk.Widget);
       const licenseText = aboutUI?.get_object("license") as Gtk.TextView | null;
