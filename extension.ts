@@ -17,21 +17,86 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+import Clutter from "gi://Clutter";
+import St from "gi://St";
 import GLib from "gi://GLib";
-import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
+import Gio from "gi://Gio";
+import GnomeDesktop from "gi://GnomeDesktop";
 
-export default class HelloWorldExtension extends Extension {
+import {
+  Extension,
+  ExtensionMetadata,
+} from "resource:///org/gnome/shell/extensions/extension.js";
+import * as Main from "resource:///org/gnome/shell/ui/main.js";
+
+export default class UTCClockExtension extends Extension {
+  private customLabel: St.Label | null = null;
+
+  private clockNotifyId: number | null = null;
+
+  private readonly settings: Gio.Settings;
+
+  constructor(metadata: ExtensionMetadata) {
+    super(metadata);
+    this.settings = this.getSettings();
+    this.settings.connect("changed::clock-format", this.updateLabel.bind(this));
+  }
+
+  private get clock(): GnomeDesktop.WallClock {
+    return Main.panel.statusArea.dateMenu._clock;
+  }
+
+  private get originalLabel(): St.Label {
+    return Main.panel.statusArea.dateMenu._clockDisplay;
+  }
+
+  private updateLabel() {
+    if (this.customLabel !== null) {
+      const now = GLib.DateTime.new_now_utc();
+      const utcNow = now.format(this.settings.get_string("clock-format"));
+      const wallNow = this.clock.clock;
+      this.customLabel.set_text(`${wallNow}\u2003${utcNow}`);
+    }
+  }
+
   override enable(): void {
-    const settings = this.getSettings();
-    // eslint-disable-next-line functional/no-conditional-statements
-    if (settings.get_boolean("say-hello")) {
-      const user = GLib.get_user_name();
-      console.log(`Hello ${user} from ${this.metadata.name}`);
+    if (this.customLabel === null) {
+      this.customLabel = new St.Label({ style_class: "clock" });
+      this.customLabel.clutter_text.y_align = Clutter.ActorAlign.CENTER;
+
+      // Insert our custom label beneath the original clock label.  We need to use
+      // get_parent here because there are intermediate layout actors; the
+      // original label is not an immediate child of the date menu.
+      this.originalLabel
+        .get_parent()
+        ?.insert_child_below(this.customLabel, this.originalLabel);
+      this.updateLabel();
+
+      // Hide the original label and make our label the label actor.
+      this.originalLabel.set_width(0);
+      Main.panel.statusArea.dateMenu.label_actor = this.customLabel;
+    }
+
+    if (this.clockNotifyId === null) {
+      this.clockNotifyId = this.clock.connect(
+        "notify::clock",
+        this.updateLabel.bind(this),
+      );
     }
   }
 
   override disable(): void {
-    const user = GLib.get_user_name();
-    console.log(`Goodbye ${user} from ${this.metadata.name}`);
+    if (this.clockNotifyId !== null) {
+      this.clock.disconnect(this.clockNotifyId);
+      this.clockNotifyId = null;
+    }
+    if (this.customLabel !== null) {
+      // Restore the original label
+      this.originalLabel.set_width(-1);
+      Main.panel.statusArea.dateMenu.label_actor = this.originalLabel;
+      // Destore our custom label
+      this.customLabel.destroy();
+      this.customLabel = null;
+    }
   }
 }

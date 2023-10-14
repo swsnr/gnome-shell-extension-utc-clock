@@ -9,7 +9,7 @@
     <property name="margin-bottom">12</property>
     <child>
       <object class="GtkLabel">
-        <property name="label">Typescript Template</property>
+        <property name="label">UTC Clock</property>
         <property name="margin-bottom">15</property>
         <style>
           <class name="title-1"/>
@@ -23,7 +23,7 @@
         <property name="margin-bottom">5</property>
         <child>
           <object class="GtkLabel">
-            <property name="label">A template for extensions in Typescript</property>
+            <property name="label">A customizable UTC clock</property>
             <property name="justify">2</property>
           </object>
         </child>
@@ -35,13 +35,13 @@
         <child>
           <object class="GtkLinkButton" id="github">
             <property name="label">Github</property>
-            <property name="uri">https://github.com/swsnr/gnome-shell-extension-typescript-template</property>
+            <property name="uri">https://github.com/swsnr/gnome-shell-extension-utc-clock</property>
           </object>
         </child>
         <child>
           <object class="GtkLinkButton" id="issues">
             <property name="label">Issue tracker</property>
-            <property name="uri">https://github.com/swsnr/gnome-shell-extension-typescript-template/issues</property>
+            <property name="uri">https://github.com/swsnr/gnome-shell-extension-utc-clock/issues</property>
           </object>
         </child>
       </object>

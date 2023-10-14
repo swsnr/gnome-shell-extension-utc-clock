@@ -17,29 +17,10 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-import type Gio from "gi://Gio";
+import type St from "gi://St";
+import GnomeDesktop from "gi://GnomeDesktop";
 
-// See https://gjs.guide/extensions/topics/extension.html#types
-export declare interface ExtensionMetadata {
-  readonly uuid: string;
-  readonly name: string;
-  readonly description: string;
-  readonly "shell-version": readonly string[];
-  readonly dir: Gio.File;
-  readonly path: string;
-}
-
-declare class ExtensionBase {
-  constructor(metadata: ExtensionMetadata);
-
-  get metadata(): ExtensionMetadata;
-  getSettings(schema?: string): Gio.Settings;
-}
-
-export declare class Extension extends ExtensionBase {
-  constructor(metadata: ExtensionMetadata);
-
-  enable(): void;
-
-  disable(): void;
+export declare class DateMenuButton extends St.Widget {
+  readonly _clockDisplay: St.Label;
+  readonly _clock: GnomeDesktop.WallClock;
 }

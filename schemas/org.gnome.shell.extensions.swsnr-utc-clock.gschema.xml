@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.swsnr-utc-clock" path="/org/gnome/shell/extensions/swsnr-utc-clock/">
+    <key name="clock-format" type="s">
+      <default>"%H:%MZ"</default>
+      <summary>The format to use to display the UTC time</summary>
+      <description>A GLib DateTime format string which describes the format to use for the clock</description>
+    </key>
+  </schema>
+</schemalist>

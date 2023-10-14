@@ -30,7 +30,7 @@ interface TracksSettings {
   _settings?: Gio.Settings;
 }
 
-export default class HelloWorldPreferences extends ExtensionPreferences {
+export default class UTCClockPreferences extends ExtensionPreferences {
   private loadUI(name: string): Gtk.Builder | null {
     const path = this.metadata.dir.get_child(name).get_path();
     if (!path) {
@@ -48,30 +48,27 @@ export default class HelloWorldPreferences extends ExtensionPreferences {
     // eslint-disable-next-line functional/prefer-immutable-types
     window: Adw.PreferencesWindow & TracksSettings,
   ): void {
-    const settingsPage = new Adw.PreferencesPage({
-      title: "General",
-      icon_name: "dialog-information-symbolic",
-    });
-    window.add(settingsPage);
-
-    const settingsGroup = new Adw.PreferencesGroup();
-    settingsPage.add(settingsGroup);
-
-    // Create a new preferences row
-    const row = new Adw.SwitchRow({
-      title: "Say hello",
-      subtitle: "Whether to say hello",
-    });
-    settingsGroup.add(row);
-
     // Create a settings object and bind the row to our key.
     // Attach the settings object to the window to keep it alive while the window is alive.
     // eslint-disable-next-line functional/immutable-data
     window._settings = this.getSettings();
+
+    const settingsPage = new Adw.PreferencesPage({
+      title: "Clock",
+      icon_name: "x-office-calendar-symbolic",
+    });
+    window.add(settingsPage);
+    const settingsGroup = new Adw.PreferencesGroup();
+    settingsPage.add(settingsGroup);
+
+    const dateTimeFormatRow = new Adw.EntryRow({
+      title: "Date Time format string",
+    });
+    settingsGroup.add(dateTimeFormatRow);
     window._settings.bind(
-      "say-hello",
-      row,
-      "active",
+      "clock-format",
+      dateTimeFormatRow,
+      "text",
       Gio.SettingsBindFlags.DEFAULT,
     );
 

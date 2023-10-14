@@ -2,7 +2,7 @@ PREFIX = /usr/local
 DESTDIR =
 HOME-DESTDIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 
-UUID = typescript-template@swsnr.de
+UUID = utc-clock@swsnr.de
 
 DIST-EXTRA-SRC = README.md LICENSE-GPL2 LICENSE-MPL2
 BLUEPRINTS = $(addprefix ui/,about.blp)
