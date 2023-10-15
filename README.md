@@ -6,6 +6,17 @@ A GNOME Shell extension to add a UTC clock with fully customizable format to the
 
 See [GLib.DateTime.format](https://docs.gtk.org/glib/method.DateTime.format.html) for supported format patterns.
 
+## Installation
+
+Install from [extensions.gnome.org](https://extensions.gnome.org/extension/6409/utc-clock/).
+
+Or download the latest ZIP file from [releases](https://github.com/swsnr/gnome-shell-extension-utc-clock/releases),
+and install with
+
+```console
+$ gnome-extensions install utc-clock@swsnr.de.shell-extension.zip
+```
+
 ## License
 
 Copyright Sebastian Wiesner <sebastian@swsnr.de>
