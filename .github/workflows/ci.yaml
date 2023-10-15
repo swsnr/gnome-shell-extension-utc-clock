@@ -31,7 +31,7 @@ jobs:
         working-directory: dist
       - uses: actions/upload-artifact@v3
         with:
-          name: extension-build.zip
+          name: dist
           path: "dist/*"
 
   create-release:
@@ -42,9 +42,10 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          path: ./artifacts
+          path: dist
+          name: dist
       - uses: softprops/action-gh-release@v1
         with:
-          files: "./artifacts/*"
+          files: "dist/*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
