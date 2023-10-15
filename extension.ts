@@ -23,80 +23,83 @@ import GLib from "gi://GLib";
 import Gio from "gi://Gio";
 import GnomeDesktop from "gi://GnomeDesktop";
 
-import {
-  Extension,
-  ExtensionMetadata,
-} from "resource:///org/gnome/shell/extensions/extension.js";
+import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 
-export default class UTCClockExtension extends Extension {
-  private customLabel: St.Label | null = null;
+class EnabledExtension {
+  readonly label: St.Label;
 
-  private clockNotifyId: number | null = null;
+  private readonly clockNotifyId: number;
+
+  private readonly settingsChangedId: number;
 
   private readonly settings: Gio.Settings;
 
-  constructor(metadata: ExtensionMetadata) {
-    super(metadata);
-    this.settings = this.getSettings();
-    this.settings.connect("changed::clock-format", this.updateLabel.bind(this));
+  constructor(settings: Gio.Settings) {
+    this.label = new St.Label({ style_class: "clock" });
+    this.label.clutter_text.y_align = Clutter.ActorAlign.CENTER;
+
+    this.settings = settings;
+    this.settingsChangedId = this.settings.connect(
+      "changed::clock-format",
+      this.updateLabel.bind(this),
+    );
+
+    this.clockNotifyId = this.wallClock.connect(
+      "notify::clock",
+      this.updateLabel.bind(this),
+    );
   }
 
-  private get clock(): GnomeDesktop.WallClock {
+  private get wallClock(): GnomeDesktop.WallClock {
     return Main.panel.statusArea.dateMenu._clock;
   }
+
+  updateLabel() {
+    const now = GLib.DateTime.new_now_utc();
+    const utcNow = now.format(this.settings.get_string("clock-format"));
+    this.label.set_text(`${this.wallClock.clock}\u2003${utcNow}`);
+  }
+
+  destroy() {
+    this.settings.disconnect(this.settingsChangedId);
+    this.wallClock.disconnect(this.clockNotifyId);
+    this.label.destroy();
+  }
+}
+
+export default class UTCClockExtension extends Extension {
+  private enabledExtension: EnabledExtension | null = null;
 
   private get originalLabel(): St.Label {
     return Main.panel.statusArea.dateMenu._clockDisplay;
   }
 
-  private updateLabel() {
-    if (this.customLabel !== null) {
-      const now = GLib.DateTime.new_now_utc();
-      const utcNow = now.format(this.settings.get_string("clock-format"));
-      const wallNow = this.clock.clock;
-      this.customLabel.set_text(`${wallNow}\u2003${utcNow}`);
-    }
-  }
-
   override enable(): void {
-    if (this.customLabel === null) {
-      this.customLabel = new St.Label({ style_class: "clock" });
-      this.customLabel.clutter_text.y_align = Clutter.ActorAlign.CENTER;
-
+    if (this.enabledExtension === null) {
+      this.enabledExtension = new EnabledExtension(this.getSettings());
       // Insert our custom label beneath the original clock label.  We need to use
       // get_parent here because there are intermediate layout actors; the
       // original label is not an immediate child of the date menu.
       this.originalLabel
         .get_parent()
-        ?.insert_child_below(this.customLabel, this.originalLabel);
-      this.updateLabel();
+        ?.insert_child_below(this.enabledExtension.label, this.originalLabel);
+      this.enabledExtension.updateLabel();
 
       // Hide the original label and make our label the label actor.
       this.originalLabel.set_width(0);
-      Main.panel.statusArea.dateMenu.label_actor = this.customLabel;
-    }
-
-    if (this.clockNotifyId === null) {
-      this.clockNotifyId = this.clock.connect(
-        "notify::clock",
-        this.updateLabel.bind(this),
-      );
+      Main.panel.statusArea.dateMenu.label_actor = this.enabledExtension.label;
     }
   }
 
   override disable(): void {
-    if (this.clockNotifyId !== null) {
-      this.clock.disconnect(this.clockNotifyId);
-      this.clockNotifyId = null;
-    }
-    if (this.customLabel !== null) {
+    if (this.enabledExtension !== null) {
       // Restore the original label
       this.originalLabel.set_width(-1);
       Main.panel.statusArea.dateMenu.label_actor = this.originalLabel;
-      // Destroy our custom label
-      this.customLabel.destroy();
-      this.customLabel = null;
+      // Destroy our extension
+      this.enabledExtension.destroy();
+      this.enabledExtension = null;
     }
   }
 }
