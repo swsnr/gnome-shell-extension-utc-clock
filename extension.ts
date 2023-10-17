@@ -118,7 +118,7 @@ export default class UTCClockExtension extends Extension {
   /**
    * The state of the enabled extension, or `null` if the extension is disabled.
    */
-  private enabledExtension: EnabledExtension | null = null;
+  private enabledExtension?: EnabledExtension | null;
 
   /**
    * Convenience getter for the original label of the date menu.
@@ -134,7 +134,7 @@ export default class UTCClockExtension extends Extension {
    * label.
    */
   override enable(): void {
-    if (this.enabledExtension === null) {
+    if (!this.enabledExtension) {
       this.enabledExtension = new EnabledExtension(this.getSettings());
       // Insert our custom label beneath the original clock label.  We need to use
       // get_parent here because there are intermediate layout actors; the
@@ -156,7 +156,7 @@ export default class UTCClockExtension extends Extension {
    * Restore the original date menu label, and destroy the entire extension state.
    */
   override disable(): void {
-    if (this.enabledExtension !== null) {
+    if (this.enabledExtension) {
       // Restore the original label
       this.originalLabel.set_width(-1);
       Main.panel.statusArea.dateMenu.label_actor = this.originalLabel;
