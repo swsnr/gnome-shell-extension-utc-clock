@@ -4,5 +4,8 @@
   "description": "A customizable UTC clock",
   "url": "https://github.com/swsnr/gnome-shell-extension-utc-clock#readme",
   "shell-version": ["45"],
-  "settings-schema": "org.gnome.shell.extensions.swsnr-utc-clock"
+  "settings-schema": "org.gnome.shell.extensions.swsnr-utc-clock",
+  "donations": {
+    "paypal": "swsnr"
+  }
 }
