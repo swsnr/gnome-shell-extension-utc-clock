@@ -17,9 +17,10 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+import GLib from "gi://GLib";
+import Gio from "gi://Gio";
 import Gtk from "gi://Gtk";
 import Adw from "gi://Adw";
-import Gio from "gi://Gio";
 
 import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
@@ -47,9 +48,10 @@ export default class UTCClockPreferences extends ExtensionPreferences {
   override fillPreferencesWindow(
     window: Adw.PreferencesWindow & TracksSettings,
   ): void {
-    // Create a settings object and bind the row to our key.
+    const settings = this.getSettings();
+
     // Attach the settings object to the window to keep it alive while the window is alive.
-    window._settings = this.getSettings();
+    window._settings = settings;
 
     const settingsPage = new Adw.PreferencesPage({
       title: "Clock",
@@ -59,11 +61,37 @@ export default class UTCClockPreferences extends ExtensionPreferences {
     const settingsGroup = new Adw.PreferencesGroup();
     settingsPage.add(settingsGroup);
 
+    const previewDateTime = GLib.DateTime.new(
+      GLib.TimeZone.new_utc(),
+      2006,
+      1,
+      2,
+      15,
+      4,
+      5,
+    );
+    const previewLabel = Gtk.Label.new("");
+    const updatePreview = () => {
+      const currentFormat = settings.get_string("clock-format");
+      if (currentFormat) {
+        previewLabel.set_markup(
+          `<span style="italic">${previewDateTime.format(
+            currentFormat,
+          )}</span>`,
+        );
+      } else {
+        previewLabel.set_text("");
+      }
+    };
+    updatePreview();
+    settings.connect("changed::clock-format", updatePreview);
+
     const dateTimeFormatRow = new Adw.EntryRow({
-      title: "Date Time format string",
+      title: "Format string",
     });
     settingsGroup.add(dateTimeFormatRow);
-    window._settings.bind(
+    dateTimeFormatRow.add_suffix(previewLabel);
+    settings.bind(
       "clock-format",
       dateTimeFormatRow,
       "text",
