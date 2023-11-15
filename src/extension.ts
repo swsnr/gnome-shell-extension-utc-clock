@@ -51,6 +51,13 @@ class EnabledExtension {
   private readonly settingsChangedId: number;
 
   /**
+   * The ID of the signal connection which listens for updates of the utc offset.
+   *
+   * We update our clock display whenever the user changes the utc offset of the time.
+   */
+  private readonly settingsUTCOffsetChangedId: number;
+
+  /**
    * The settings of this extension.
    */
   private readonly settings: Gio.Settings;
@@ -71,6 +78,10 @@ class EnabledExtension {
     this.settings = settings;
     this.settingsChangedId = this.settings.connect(
       "changed::clock-format",
+      this.updateClockDisplay.bind(this),
+    );
+    this.settingsUTCOffsetChangedId = this.settings.connect(
+      "changed::utc-offset",
       this.updateClockDisplay.bind(this),
     );
 
@@ -94,8 +105,8 @@ class EnabledExtension {
    * for this extension.
    */
   updateClockDisplay() {
-    const now = GLib.DateTime.new_now_utc();
-    const utcNow = now.format(this.settings.get_string("clock-format"));
+    const now = GLib.DateTime.new_now_utc().add_hours(this.settings.get_int("utc-offset"));
+    const utcNow = now?.format(this.settings.get_string("clock-format"));
     this.label.set_text(`${this.wallClock.clock}\u2003${utcNow}`);
   }
 
@@ -106,6 +117,7 @@ class EnabledExtension {
    */
   destroy() {
     this.settings.disconnect(this.settingsChangedId);
+    this.settings.disconnect(this.settingsUTCOffsetChangedId);
     this.wallClock.disconnect(this.clockNotifyId);
     this.label.destroy();
   }

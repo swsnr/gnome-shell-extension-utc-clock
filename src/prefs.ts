@@ -97,6 +97,22 @@ export default class UTCClockPreferences extends ExtensionPreferences {
       "text",
       Gio.SettingsBindFlags.DEFAULT,
     );
+    const utcOffsetSpinRow = new Adw.SpinRow ({
+      title: "Time Zone Offset",
+      adjustment: new Gtk.Adjustment({
+          lower: -11,
+          upper: 14,
+          step_increment: 1,
+          page_increment: 3
+      }),
+    });
+    settingsGroup.add(utcOffsetSpinRow);
+    settings.bind(
+      "utc-offset",
+      utcOffsetSpinRow,
+      "value",
+      Gio.SettingsBindFlags.DEFAULT,
+    );
 
     const aboutPage = new Adw.PreferencesPage({
       title: "About",

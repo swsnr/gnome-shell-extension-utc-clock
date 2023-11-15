@@ -6,5 +6,10 @@
       <summary>The format to use to display the UTC time</summary>
       <description>A GLib DateTime format string which describes the format to use for the clock</description>
     </key>
+    <key name="utc-offset" type="i">
+      <default>8</default>
+      <summary>offset relative to utc-0</summary>
+      <description>A int32 which describes the offet of the time zone in hours</description>
+    </key>
   </schema>
 </schemalist>
