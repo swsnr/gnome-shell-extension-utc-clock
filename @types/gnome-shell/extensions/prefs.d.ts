@@ -27,6 +27,4 @@ export declare class ExtensionPreferences extends ExtensionBase {
   fillPreferencesWindow(window: Adw.PreferencesWindow): void;
 }
 
-export {
-  ExtensionMetadata,
-} from "resource:///org/gnome/shell/extensions/extension.js";
+export { ExtensionMetadata } from "resource:///org/gnome/shell/extensions/extension.js";

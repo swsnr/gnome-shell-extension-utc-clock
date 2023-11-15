@@ -16,6 +16,14 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "promise"],
   root: true,
-  // These are either generated or config files or no real typescript
-  ignorePatterns: ["*.js", "*.cjs", "*.d.ts"],
+  rules: {},
+  ignorePatterns: [
+    // Build outputs
+    "/build/**/*",
+    "/dist/**/*",
+    // Node modules
+    "/node_modules/**/*",
+    // Generated types
+    "/@types/gir-generated/**/*",
+  ],
 };
