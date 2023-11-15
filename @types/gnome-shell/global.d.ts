@@ -17,16 +17,12 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-import type Gtk from "gi://Gtk";
-import type Adw from "gi://Adw";
-import { ExtensionBase } from "resource:///org/gnome/shell/extensions/extension.js";
-
-export declare class ExtensionPreferences extends ExtensionBase {
-  getPreferencesWidget(): Gtk.Widget;
-
-  fillPreferencesWindow(window: Adw.PreferencesWindow): void;
+interface String {
+  // GNOME Shell pollutes the String prototype with its own format function
+  format(...args: unknown[]): string;
 }
 
-export {
-  ExtensionMetadata,
-} from "resource:///org/gnome/shell/extensions/extension.js";
+interface ImportMeta {
+  /** GNOME Shell/GJS add the imported URL here */
+  readonly url: string;
+}

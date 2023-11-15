@@ -25,6 +25,7 @@ export declare interface ExtensionMetadata {
   readonly name: string;
   readonly description: string;
   readonly "shell-version": readonly string[];
+  readonly "version-name"?: string | null;
   readonly dir: Gio.File;
   readonly path: string;
   readonly url: string;
