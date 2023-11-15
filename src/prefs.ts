@@ -59,6 +59,57 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.`;
 
+interface ClockPageChildren {
+  readonly _dateTimeFormat: Adw.EntryRow;
+  readonly _previewLabel: Gtk.Label;
+}
+
+const ClockPage = GObject.registerClass(
+  {
+    GTypeName: "ClockPage",
+    Template: getTemplate("ClockPage"),
+    InternalChildren: ["dateTimeFormat", "previewLabel"],
+  },
+  class ClockPage extends Adw.PreferencesPage {
+    constructor(settings: Gio.Settings) {
+      super();
+
+      const children = this as unknown as ClockPageChildren;
+
+      settings.bind(
+        "clock-format",
+        children._dateTimeFormat,
+        "text",
+        Gio.SettingsBindFlags.DEFAULT,
+      );
+
+      const previewDateTime = GLib.DateTime.new(
+        GLib.TimeZone.new_utc(),
+        2006,
+        1,
+        2,
+        15,
+        4,
+        5,
+      );
+      const updatePreview = () => {
+        const currentFormat = settings.get_string("clock-format");
+        if (currentFormat) {
+          children._previewLabel.set_markup(
+            `<span style="italic">${previewDateTime.format(
+              currentFormat,
+            )}</span>`,
+          );
+        } else {
+          children._previewLabel.set_text("");
+        }
+      };
+      updatePreview();
+      settings.connect("changed::clock-format", updatePreview);
+    }
+  },
+);
+
 interface AboutPageChildren {
   readonly _extensionName: Gtk.Label;
   readonly _extensionDescription: Gtk.Label;
@@ -110,55 +161,10 @@ export default class UTCClockPreferences extends ExtensionPreferences {
     window: Adw.PreferencesWindow & TracksSettings,
   ): void {
     const settings = this.getSettings();
-
     // Attach the settings object to the window to keep it alive while the window is alive.
     window._settings = settings;
 
-    const settingsPage = new Adw.PreferencesPage({
-      title: "Clock",
-      icon_name: "x-office-calendar-symbolic",
-    });
-    window.add(settingsPage);
-    const settingsGroup = new Adw.PreferencesGroup();
-    settingsPage.add(settingsGroup);
-
-    const previewDateTime = GLib.DateTime.new(
-      GLib.TimeZone.new_utc(),
-      2006,
-      1,
-      2,
-      15,
-      4,
-      5,
-    );
-    const previewLabel = Gtk.Label.new("");
-    const updatePreview = () => {
-      const currentFormat = settings.get_string("clock-format");
-      if (currentFormat) {
-        previewLabel.set_markup(
-          `<span style="italic">${previewDateTime.format(
-            currentFormat,
-          )}</span>`,
-        );
-      } else {
-        previewLabel.set_text("");
-      }
-    };
-    updatePreview();
-    settings.connect("changed::clock-format", updatePreview);
-
-    const dateTimeFormatRow = new Adw.EntryRow({
-      title: "Format string",
-    });
-    settingsGroup.add(dateTimeFormatRow);
-    dateTimeFormatRow.add_suffix(previewLabel);
-    settings.bind(
-      "clock-format",
-      dateTimeFormatRow,
-      "text",
-      Gio.SettingsBindFlags.DEFAULT,
-    );
-
+    window.add(new ClockPage(settings));
     window.add(new AboutPage(this.metadata));
   }
 }

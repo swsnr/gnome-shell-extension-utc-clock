@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="ClockPage" parent="AdwPreferencesPage">
+    <property name="title">Clock</property>
+    <property name="icon-name">x-office-calendar-symbolic</property>
+    <property name="description">Clock settings</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <child>
+          <object class="AdwEntryRow" id="dateTimeFormat">
+            <property name="title">Format string</property>
+            <child type="suffix">
+              <object class="GtkLabel" id="previewLabel"></object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
