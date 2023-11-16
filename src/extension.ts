@@ -25,6 +25,7 @@ import St from "gi://St";
 
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
+import type { DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js";
 
 /**
  * A label which combines the GNOME desktop wall clock with our custom UTC clock.
@@ -104,7 +105,7 @@ class EnabledExtension {
   /**
    * The clock display label.
    */
-  readonly clockLabel: CombinedUtcClockLabel;
+  private readonly clockLabel: CombinedUtcClockLabel;
 
   /**
    * Property bindings to unbind upon destruction.
@@ -142,6 +143,21 @@ class EnabledExtension {
         GObject.BindingFlags.SYNC_CREATE,
       ),
     );
+
+    // Insert our custom label beneath the original clock label.  We need to use
+    // get_parent here because there are intermediate layout actors; the
+    // original label is not an immediate child of the date menu.
+    this.dateMenu._clockDisplay
+      .get_parent()
+      ?.insert_child_below(this.clockLabel, this.dateMenu._clockDisplay);
+    // Hide the original label and make our label the label actor.
+    this.dateMenu._clockDisplay.set_width(0);
+    Main.panel.statusArea.dateMenu.label_actor = this.clockLabel;
+  }
+
+  /** Convenience getter for the date menu */
+  private get dateMenu(): DateMenuButton {
+    return Main.panel.statusArea.dateMenu;
   }
 
   /**
@@ -154,6 +170,9 @@ class EnabledExtension {
       this.bindings.pop()?.unbind();
     }
     this.clockLabel.destroy();
+    // Restore the original label
+    this.dateMenu._clockDisplay.set_width(-1);
+    this.dateMenu.label_actor = this.dateMenu._clockDisplay;
   }
 }
 
@@ -167,13 +186,6 @@ export default class UTCClockExtension extends Extension {
   private enabledExtension?: EnabledExtension | null;
 
   /**
-   * Convenience getter for the original label of the date menu.
-   */
-  private get originalLabel(): St.Label {
-    return Main.panel.statusArea.dateMenu._clockDisplay;
-  }
-
-  /**
    * Enable this extension.
    *
    * Create a new label for our custom clock, and hide the original date menu
@@ -182,20 +194,6 @@ export default class UTCClockExtension extends Extension {
   override enable(): void {
     if (!this.enabledExtension) {
       this.enabledExtension = new EnabledExtension(this.getSettings());
-      // Insert our custom label beneath the original clock label.  We need to use
-      // get_parent here because there are intermediate layout actors; the
-      // original label is not an immediate child of the date menu.
-      this.originalLabel
-        .get_parent()
-        ?.insert_child_below(
-          this.enabledExtension.clockLabel,
-          this.originalLabel,
-        );
-
-      // Hide the original label and make our label the label actor.
-      this.originalLabel.set_width(0);
-      Main.panel.statusArea.dateMenu.label_actor =
-        this.enabledExtension.clockLabel;
     }
   }
 
@@ -206,9 +204,6 @@ export default class UTCClockExtension extends Extension {
    */
   override disable(): void {
     if (this.enabledExtension) {
-      // Restore the original label
-      this.originalLabel.set_width(-1);
-      Main.panel.statusArea.dateMenu.label_actor = this.originalLabel;
       // Destroy our extension, and null the reference to make sure everything
       // gets cleaned up properly.
       this.enabledExtension.destroy();
