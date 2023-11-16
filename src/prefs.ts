@@ -160,6 +160,15 @@ export default class UTCClockPreferences extends ExtensionPreferences {
   override fillPreferencesWindow(
     window: Adw.PreferencesWindow & TracksSettings,
   ): void {
+    // Add our icons directory to the Gtk theme path, so that we're able to use
+    // our icons in Adwaita widgets.
+    const iconTheme = Gtk.IconTheme.get_for_display(window.get_display());
+    const iconsDirectory = this.metadata.dir.get_child("icons").get_path();
+    if (iconsDirectory === null) {
+      throw new Error("Failed to get path for icon directory");
+    }
+    iconTheme.add_search_path(iconsDirectory);
+
     const settings = this.getSettings();
     // Attach the settings object to the window to keep it alive while the window is alive.
     window._settings = settings;

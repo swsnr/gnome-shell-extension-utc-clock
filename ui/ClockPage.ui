@@ -3,7 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <template class="ClockPage" parent="AdwPreferencesPage">
     <property name="title">Clock</property>
-    <property name="icon-name">x-office-calendar-symbolic</property>
+    <property name="icon-name">clock-utc-symbolic</property>
     <property name="description">Clock settings</property>
     <child>
       <object class="AdwPreferencesGroup">

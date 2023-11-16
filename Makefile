@@ -4,7 +4,7 @@ HOME-DESTDIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 
 UUID = utc-clock@swsnr.de
 
-DIST-EXTRA-SRC = LICENSE-GPL2 LICENSE-MPL2
+DIST-EXTRA-SRC = LICENSE-GPL2 LICENSE-MPL2 icons
 BLUEPRINTS = $(wildcard ui/*.blp)
 UIDEFS = $(addsuffix .ui,$(basename $(BLUEPRINTS)))
 
