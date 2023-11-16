@@ -17,38 +17,99 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-import Clutter from "gi://Clutter";
-import St from "gi://St";
+import GObject from "gi://GObject";
 import GLib from "gi://GLib";
 import Gio from "gi://Gio";
-import GnomeDesktop from "gi://GnomeDesktop";
+import Clutter from "gi://Clutter";
+import St from "gi://St";
 
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
+
+/**
+ * A label which combines the GNOME desktop wall clock with our custom UTC clock.
+ */
+const CombinedUtcClockLabel = GObject.registerClass(
+  {
+    Properties: {
+      wallClock: GObject.ParamSpec.string(
+        "wallClock",
+        "WallClock",
+        "Wall clock text",
+        GObject.ParamFlags.READWRITE,
+        null,
+      ),
+      clockFormat: GObject.ParamSpec.string(
+        "clockFormat",
+        "ClockFormat",
+        "Clock format",
+        GObject.ParamFlags.READWRITE,
+        "%H:%M",
+      ),
+    },
+  },
+  class UtcClockLabel extends St.Label {
+    #wallClock: string | null = null;
+    #clockFormat = "%H:%M";
+
+    constructor(props?: St.Label.ConstructorProperties) {
+      super(props);
+      this.add_style_class_name("clock");
+      this.clutter_text.y_align = Clutter.ActorAlign.CENTER;
+      this.updateClock();
+    }
+
+    /**
+     * The wall clock text to show.
+     */
+    get wallClock(): string | null {
+      return this.#wallClock;
+    }
+
+    set wallClock(value: string | null) {
+      this.#wallClock = value;
+      this.updateClock();
+    }
+
+    /**
+     * The clock format for the UTC part.
+     */
+    get clockFormat(): string {
+      return this.#clockFormat;
+    }
+
+    set clockFormat(value: string) {
+      this.#clockFormat = value;
+      this.updateClock();
+    }
+
+    /**
+     * Update our clock.
+     */
+    private updateClock(): void {
+      const now = GLib.DateTime.new_now_utc();
+      const utcNow = now.format(this.#clockFormat);
+      const wallClock = this.#wallClock ?? "";
+      this.set_text(`${wallClock}\u2003${utcNow}`);
+    }
+  },
+);
+
+type CombinedUtcClockLabel = InstanceType<typeof CombinedUtcClockLabel>;
 
 /**
  * The state of the enabled extension.
  */
 class EnabledExtension {
   /**
-   * Our clock display label, which we use instead of the original label.
+   * The clock display label.
    */
-  readonly label: St.Label;
+  readonly clockLabel: CombinedUtcClockLabel;
 
   /**
-   * The ID of the signal connection which listens for updates of the GNOME wall clock.
-   *
-   * We update our clock display whenever the wall clock updates itself.
+   * Property bindings to unbind upon destruction.
    */
-  private readonly clockNotifyId: number;
-
-  /**
-   * The ID of the signal connection which listens for updates of the clock format.
-   *
-   * We update our clock display whenever the user changes the format in which
-   * to display the UTC time.
-   */
-  private readonly settingsChangedId: number;
+  private readonly bindings: GObject.Binding[] = [];
 
   /**
    * The settings of this extension.
@@ -65,38 +126,22 @@ class EnabledExtension {
    * @param settings The settings of this extension
    */
   constructor(settings: Gio.Settings) {
-    this.label = new St.Label({ style_class: "clock" });
-    this.label.clutter_text.y_align = Clutter.ActorAlign.CENTER;
-
     this.settings = settings;
-    this.settingsChangedId = this.settings.connect(
-      "changed::clock-format",
-      this.updateClockDisplay.bind(this),
+    this.clockLabel = new CombinedUtcClockLabel();
+    this.settings.bind(
+      "clock-format",
+      this.clockLabel,
+      "clockFormat",
+      Gio.SettingsBindFlags.DEFAULT,
     );
-
-    this.clockNotifyId = this.wallClock.connect(
-      "notify::clock",
-      this.updateClockDisplay.bind(this),
+    this.bindings.push(
+      Main.panel.statusArea.dateMenu._clock.bind_property(
+        "clock",
+        this.clockLabel,
+        "wallClock",
+        GObject.BindingFlags.SYNC_CREATE,
+      ),
     );
-  }
-
-  /**
-   * Convenience accessor for the wall clock which provides the time on the date menu utton.
-   */
-  private get wallClock(): GnomeDesktop.WallClock {
-    return Main.panel.statusArea.dateMenu._clock;
-  }
-
-  /**
-   * Update our clock display.
-   *
-   * Shows the GNOME wall clock time and the UTC time in the format configured
-   * for this extension.
-   */
-  updateClockDisplay() {
-    const now = GLib.DateTime.new_now_utc();
-    const utcNow = now.format(this.settings.get_string("clock-format"));
-    this.label.set_text(`${this.wallClock.clock}\u2003${utcNow}`);
   }
 
   /**
@@ -105,9 +150,10 @@ class EnabledExtension {
    * Disconnects from all signals, and destroys our label actor.
    */
   destroy() {
-    this.settings.disconnect(this.settingsChangedId);
-    this.wallClock.disconnect(this.clockNotifyId);
-    this.label.destroy();
+    while (0 < this.bindings.length) {
+      this.bindings.pop()?.unbind();
+    }
+    this.clockLabel.destroy();
   }
 }
 
@@ -141,12 +187,15 @@ export default class UTCClockExtension extends Extension {
       // original label is not an immediate child of the date menu.
       this.originalLabel
         .get_parent()
-        ?.insert_child_below(this.enabledExtension.label, this.originalLabel);
-      this.enabledExtension.updateClockDisplay();
+        ?.insert_child_below(
+          this.enabledExtension.clockLabel,
+          this.originalLabel,
+        );
 
       // Hide the original label and make our label the label actor.
       this.originalLabel.set_width(0);
-      Main.panel.statusArea.dateMenu.label_actor = this.enabledExtension.label;
+      Main.panel.statusArea.dateMenu.label_actor =
+        this.enabledExtension.clockLabel;
     }
   }
 
