@@ -16,7 +16,7 @@ dist: compile
 	npm run dist:format
 	gnome-extensions pack --force --out-dir dist build \
 		--extra-source=../metadata.json \
-		--extra-source=ui \
+		--extra-source=ui --extra-source=common \
 		$(addprefix --extra-source=,$(wildcard src/*)) \
 		$(addprefix --extra-source=../,$(DIST-EXTRA-SRC)) \
 		$(addprefix --schema=../,$(wildcard schemas/*.gschema.xml))
