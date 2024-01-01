@@ -24,7 +24,5 @@ module.exports = {
     // Yarn artifacts
     "/.yarn",
     "/.pnp.*",
-    // Generated types
-    "/@types/gir-generated/**/*",
   ],
 };

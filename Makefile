@@ -62,10 +62,6 @@ compile: $(UIDEFS)
 clean:
 	rm -rf ./dist/ ./build/
 
-.PHONY: generate
-generate:
-	yarn generate:gir-types
-
 .PHONY: format
 format:
 	yarn format --write
@@ -74,7 +70,11 @@ format:
 lint:
 	yarn lint
 
-.PHONY: check
+.PHONY: check-types
+check-types:
+	yarn check:types
+
+.PHONY: check check-types
 check: lint
 	yarn format --check
 

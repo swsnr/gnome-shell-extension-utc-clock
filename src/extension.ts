@@ -20,12 +20,20 @@
 import GObject from "gi://GObject";
 import Gio from "gi://Gio";
 
+import type GnomeDesktop from "gi://GnomeDesktop";
+import type St from "gi://St";
+
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 
-import { BindingTracker, Destroyer } from "./common/lifecycle";
-import { CombinedUtcClockLabel } from "./label";
-import { DestructibleExtension } from "./common/extension";
+import { BindingTracker, Destroyer } from "./common/lifecycle.js";
+import { CombinedUtcClockLabel } from "./label.js";
+import { DestructibleExtension } from "./common/extension.js";
+
+interface DateMenuButtonInternals extends St.Button {
+  _clock: GnomeDesktop.WallClock;
+  _clockDisplay: St.Label;
+}
 
 const initialize = (extension: Extension, destroyer: Destroyer): void => {
   const settings = extension.getSettings();
@@ -39,7 +47,8 @@ const initialize = (extension: Extension, destroyer: Destroyer): void => {
     Gio.SettingsBindFlags.DEFAULT,
   );
 
-  const dateMenu = Main.panel.statusArea.dateMenu;
+  const dateMenu = Main.panel.statusArea
+    .dateMenu as unknown as DateMenuButtonInternals;
   bindings.add(
     dateMenu._clock.bind_property(
       "clock",
@@ -58,7 +67,7 @@ const initialize = (extension: Extension, destroyer: Destroyer): void => {
 
   // Hide original label
   dateMenu._clockDisplay.set_width(0);
-  Main.panel.statusArea.dateMenu.label_actor = clockLabel;
+  dateMenu.label_actor = clockLabel;
   destroyer.add({
     destroy() {
       // Restore the original label

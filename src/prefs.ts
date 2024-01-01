@@ -23,10 +23,9 @@ import Gio from "gi://Gio";
 import Gtk from "gi://Gtk";
 import Adw from "gi://Adw";
 
-import {
-  ExtensionPreferences,
-  ExtensionMetadata,
-} from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
+import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
+
+import type { ExtensionMetadata } from "@girs/gnome-shell/extensions/extension";
 
 const getTemplate = (name: string): string => {
   const uri = GLib.uri_resolve_relative(
@@ -142,8 +141,13 @@ const AboutPage = GObject.registerClass(
       } else {
         children._extensionVersion.visible = false;
       }
-      children._linkGithub.set_uri(metadata.url);
-      children._linkIssues.set_uri(`${metadata.url}/issues`);
+      if (metadata.url) {
+        children._linkGithub.set_uri(metadata.url);
+        children._linkIssues.set_uri(`${metadata.url}/issues`);
+      } else {
+        children._linkGithub.visible = false;
+        children._linkIssues.visible = false;
+      }
       children._extensionLicense.buffer.set_text(LICENSE, -1);
     }
   },
