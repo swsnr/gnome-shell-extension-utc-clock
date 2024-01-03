@@ -19,9 +19,8 @@
 
 import GObject from "gi://GObject";
 import Gio from "gi://Gio";
-
-import type GnomeDesktop from "gi://GnomeDesktop";
-import type St from "gi://St";
+import GnomeDesktop from "gi://GnomeDesktop";
+import St from "gi://St";
 
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
@@ -29,15 +28,44 @@ import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import { BindingTracker, Destroyer } from "./common/lifecycle.js";
 import { CombinedUtcClockLabel } from "./label.js";
 import { DestructibleExtension } from "./common/extension.js";
+import type { DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js";
+import { PACKAGE_NAME as GNOME_VERSION } from "resource:///org/gnome/shell/misc/config.js";
 
-interface DateMenuButtonInternals extends St.Button {
-  _clock: GnomeDesktop.WallClock;
-  _clockDisplay: St.Label;
+interface DateMenuButtonInternals {
+  readonly _clock?: GnomeDesktop.WallClock;
+  readonly _clockDisplay?: St.Label;
 }
+
+/**
+ * Check that the date menu button has the expected internal attributes.
+ *
+ * We rely upon private things for monkey-patching, so let's assert that these
+ * still exist, to fail with a clear error message instead of random undefined
+ * errors, in case GNOME Shell changes this in future releases.
+ *
+ * @param button The date menu button to check
+ * @returns Whether the button has the expected internal attributes.
+ */
+const hasClock = (
+  button: DateMenuButton,
+): button is DateMenuButton & Required<DateMenuButtonInternals> => {
+  const internals = button as DateMenuButtonInternals;
+  return (
+    internals._clock instanceof GnomeDesktop.WallClock &&
+    internals._clockDisplay instanceof St.Label
+  );
+};
 
 const initialize = (extension: Extension, destroyer: Destroyer): void => {
   const settings = extension.getSettings();
   const bindings = destroyer.add(new BindingTracker());
+
+  const dateMenu = Main.panel.statusArea.dateMenu;
+  if (!hasClock(dateMenu)) {
+    throw new Error(
+      `The date menu button lacks expected internal attributes for monkey patching in this GNOME Shell version ${GNOME_VERSION}`,
+    );
+  }
 
   const clockLabel = destroyer.add(new CombinedUtcClockLabel());
   settings.bind(
@@ -47,8 +75,6 @@ const initialize = (extension: Extension, destroyer: Destroyer): void => {
     Gio.SettingsBindFlags.DEFAULT,
   );
 
-  const dateMenu = Main.panel.statusArea
-    .dateMenu as unknown as DateMenuButtonInternals;
   bindings.add(
     dateMenu._clock.bind_property(
       "clock",

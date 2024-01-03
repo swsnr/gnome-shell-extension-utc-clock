@@ -9,10 +9,6 @@
     "removeComments": false,
     "skipLibCheck": true
   },
-  "include": [
-    "@types/gnome-shell/ambient.d.ts",
-    "@types/gnome-shell/global.d.ts",
-    "src/**/*.ts"
-  ],
+  "include": ["@types/gnome-shell/ambient.d.ts", "src/**/*.ts"],
   "exclude": [".eslintrc.cjs"]
 }
