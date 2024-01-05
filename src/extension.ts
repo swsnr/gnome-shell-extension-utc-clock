@@ -25,9 +25,9 @@ import St from "gi://St";
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 
-import { BindingTracker, Destroyer } from "./common/lifecycle.js";
-import { CombinedUtcClockLabel } from "./label.js";
-import { DestructibleExtension } from "./common/extension.js";
+import { BindingTracker, Destroyer } from "./lib/common/lifecycle.js";
+import { CombinedUtcClockLabel } from "./lib/label.js";
+import { DestructibleExtension } from "./lib/common/extension.js";
 import type { DateMenuButton } from "resource:///org/gnome/shell/ui/dateMenu.js";
 import { PACKAGE_NAME as GNOME_VERSION } from "resource:///org/gnome/shell/misc/config.js";
 
