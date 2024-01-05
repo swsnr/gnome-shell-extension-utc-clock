@@ -3,7 +3,7 @@
   "uuid": "utc-clock@swsnr.de",
   "description": "A customizable UTC clock.\n\nAdd a second clock to the bar which shows the current UTC time, in a completely customizable format.",
   "url": "https://github.com/swsnr/gnome-shell-extension-utc-clock#readme",
-  "version-name": "45.3",
+  "version-name": "45.4",
   "shell-version": ["45"],
   "settings-schema": "org.gnome.shell.extensions.swsnr-utc-clock",
   "donations": {
