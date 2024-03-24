@@ -94,10 +94,9 @@ const ClockPage = GObject.registerClass(
       const updatePreview = () => {
         const currentFormat = settings.get_string("clock-format");
         if (currentFormat) {
+          const preview = previewDateTime.format(currentFormat) ?? "";
           children._previewLabel.set_markup(
-            `<span style="italic">${previewDateTime.format(
-              currentFormat,
-            )}</span>`,
+            `<span style="italic">${preview}</span>`,
           );
         } else {
           children._previewLabel.set_text("");

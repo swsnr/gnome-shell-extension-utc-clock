@@ -84,7 +84,7 @@ export const CombinedUtcClockLabel = GObject.registerClass(
      */
     private updateClock(): void {
       const now = GLib.DateTime.new_now_utc();
-      const utcNow = now.format(this.#clockFormat);
+      const utcNow = now.format(this.#clockFormat) ?? "";
       const wallClock = this.#wallClock ?? "";
       this.set_text(`${wallClock}\u2003${utcNow}`);
     }
