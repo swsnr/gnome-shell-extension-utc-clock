@@ -21,8 +21,7 @@ module.exports = {
     // Build outputs
     "/build/**/*",
     "/dist/**/*",
-    // Yarn artifacts
-    "/.yarn",
-    "/.pnp.*",
+    // Packages
+    "/node_modules/",
   ],
 };
