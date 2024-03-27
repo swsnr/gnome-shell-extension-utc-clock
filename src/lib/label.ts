@@ -51,7 +51,7 @@ export const CombinedUtcClockLabel = GObject.registerClass(
     constructor(props?: St.Label.ConstructorProperties) {
       super(props);
       this.add_style_class_name("clock");
-      this.clutter_text.y_align = Clutter.ActorAlign.CENTER;
+      this.clutterText.yAlign = Clutter.ActorAlign.CENTER;
       this.updateClock();
     }
 

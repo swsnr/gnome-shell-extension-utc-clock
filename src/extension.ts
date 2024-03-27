@@ -93,12 +93,12 @@ const initialize = (extension: Extension, destroyer: Destroyer): void => {
 
   // Hide original label
   dateMenu._clockDisplay.set_width(0);
-  dateMenu.label_actor = clockLabel;
+  dateMenu.labelActor = clockLabel;
   destroyer.add({
     destroy() {
       // Restore the original label
       dateMenu._clockDisplay.set_width(-1);
-      dateMenu.label_actor = dateMenu._clockDisplay;
+      dateMenu.labelActor = dateMenu._clockDisplay;
     },
   });
 };
