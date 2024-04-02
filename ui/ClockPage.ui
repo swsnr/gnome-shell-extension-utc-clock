@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <template class="ClockPage" parent="AdwPreferencesPage">
+  <template class="UTCClockClockPage" parent="AdwPreferencesPage">
     <property name="title">Clock</property>
     <property name="icon-name">clock-utc-symbolic</property>
     <property name="description">Clock settings</property>

@@ -65,11 +65,11 @@ interface ClockPageChildren {
 
 const ClockPage = GObject.registerClass(
   {
-    GTypeName: "ClockPage",
+    GTypeName: "UTCClockClockPage",
     Template: getTemplate("ClockPage"),
     InternalChildren: ["dateTimeFormat", "previewLabel"],
   },
-  class ClockPage extends Adw.PreferencesPage {
+  class UTCClockClockPage extends Adw.PreferencesPage {
     constructor(settings: Gio.Settings) {
       super();
 
@@ -119,7 +119,7 @@ interface AboutPageChildren {
 
 const AboutPage = GObject.registerClass(
   {
-    GTypeName: "AboutPage",
+    GTypeName: "UTCClockAboutPage",
     Template: getTemplate("AboutPage"),
     InternalChildren: [
       "extensionName",
@@ -129,7 +129,7 @@ const AboutPage = GObject.registerClass(
       "extensionLicense",
     ],
   },
-  class AboutPage extends Adw.PreferencesPage {
+  class UTCClockAboutPage extends Adw.PreferencesPage {
     constructor(metadata: ExtensionMetadata) {
       super();
 
