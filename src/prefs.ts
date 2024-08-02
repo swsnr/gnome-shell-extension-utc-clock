@@ -27,17 +27,12 @@ import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/
 
 import type { ExtensionMetadata } from "@girs/gnome-shell/extensions/extension";
 
-const getTemplate = (name: string): string => {
-  const uri = GLib.uri_resolve_relative(
+const getTemplate = (name: string): string =>
+  GLib.uri_resolve_relative(
     import.meta.url,
     `ui/${name}.ui`,
     GLib.UriFlags.NONE,
   );
-  if (uri === null) {
-    throw new Error(`Failed to resolve URI for template ${name}!`);
-  }
-  return uri;
-};
 
 const LICENSE = `Copyright Sebastian Wiesner <sebastian@swsnr.de>
 
