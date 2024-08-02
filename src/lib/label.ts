@@ -33,7 +33,7 @@ export const CombinedUtcClockLabel = GObject.registerClass(
         "WallClock",
         "Wall clock text",
         GObject.ParamFlags.READWRITE,
-        null,
+        "",
       ),
       clockFormat: GObject.ParamSpec.string(
         "clockFormat",
@@ -48,7 +48,7 @@ export const CombinedUtcClockLabel = GObject.registerClass(
     #wallClock: string | null = null;
     #clockFormat = "%H:%M";
 
-    constructor(props?: St.Label.ConstructorProperties) {
+    constructor(props?: St.Label.ConstructorProps) {
       super(props);
       this.add_style_class_name("clock");
       this.clutterText.yAlign = Clutter.ActorAlign.CENTER;
