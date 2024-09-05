@@ -2,13 +2,13 @@ using Gtk 4.0;
 using Adw 1;
 
 template $UTCClockClockPage : Adw.PreferencesPage {
-    title: "Clock";
+    title: _("Clock");
     icon-name: "clock-utc-symbolic";
-    description: "Clock settings";
+    description: _("Clock settings");
 
     Adw.PreferencesGroup {
         Adw.EntryRow dateTimeFormat {
-            title: "Format string";
+            title: _("Format string");
 
             [suffix]
             Gtk.Label previewLabel {}

@@ -7,14 +7,14 @@ corresponding .blp file and regenerate this file with blueprint-compiler.
 <interface>
   <requires lib="gtk" version="4.0"/>
   <template class="UTCClockClockPage" parent="AdwPreferencesPage">
-    <property name="title">Clock</property>
+    <property name="title" translatable="yes">Clock</property>
     <property name="icon-name">clock-utc-symbolic</property>
-    <property name="description">Clock settings</property>
+    <property name="description" translatable="yes">Clock settings</property>
     <child>
       <object class="AdwPreferencesGroup">
         <child>
           <object class="AdwEntryRow" id="dateTimeFormat">
-            <property name="title">Format string</property>
+            <property name="title" translatable="yes">Format string</property>
             <child type="suffix">
               <object class="GtkLabel" id="previewLabel"></object>
             </child>
