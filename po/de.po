@@ -1,0 +1,48 @@
+# Copyright (C) 2024 Sebastian Wiesner <sebastian@swsnr.de>
+# This file is distributed under the same license as the utc-clock@swsnr.de package.
+# Sebastian Wiesner <sebastian@swsnr.de>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-05 11:45+0200\n"
+"PO-Revision-Date: 2024-09-05 13:00+0200\n"
+"Last-Translator: Sebastian Wiesner <sebastian@swsnr.de>\n"
+"Language-Team: German\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 46.1\n"
+
+#: ui/AboutPage.blp:5
+msgid "About"
+msgstr "Über"
+
+#: ui/AboutPage.blp:35
+msgid "A completely customizable UTC clock for the top panel."
+msgstr "Eine vollständig konfigurierbare UTC-Uhr für die obere Leiste."
+
+#: ui/AboutPage.blp:44
+msgctxt "about link"
+msgid "Github"
+msgstr "Github"
+
+#: ui/AboutPage.blp:49
+msgctxt "about link"
+msgid "Issue tracker"
+msgstr "Issue Tracker"
+
+#: ui/ClockPage.blp:5
+msgid "Clock"
+msgstr "Uhr"
+
+#: ui/ClockPage.blp:7
+msgid "Clock settings"
+msgstr "Uhr-Einstellungen"
+
+#: ui/ClockPage.blp:11
+msgid "Format string"
+msgstr "Format-Zeichenkette"
