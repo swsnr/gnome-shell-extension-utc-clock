@@ -6,6 +6,7 @@
   "version-name": "46.2",
   "shell-version": ["46"],
   "settings-schema": "org.gnome.shell.extensions.swsnr-utc-clock",
+  "gettext-domain": "utc-clock@swsnr.de",
   "donations": {
     "paypal": "swsnr"
   }
