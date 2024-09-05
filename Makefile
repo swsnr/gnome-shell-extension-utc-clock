@@ -5,7 +5,8 @@ HOME-DESTDIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 UUID = utc-clock@swsnr.de
 
 DIST-EXTRA-SRC = LICENSE-GPL2 LICENSE-MPL2 icons
-UIDEFS = $(wildcard ui/*.ui)
+BLUEPRINTS = $(wildcard ui/*.blp)
+UIDEFS = $(addsuffix .ui,$(basename $(BLUEPRINTS)))
 
 .PHONY: dist
 dist: compile
@@ -79,3 +80,6 @@ check: lint
 .PHONY: fix
 fix: format
 	pnpm lint --fix
+
+$(UIDEFS): %.ui: %.blp
+	blueprint-compiler compile --output $@ $<
