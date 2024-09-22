@@ -157,7 +157,7 @@ interface TracksSettings {
 export default class UTCClockPreferences extends ExtensionPreferences {
   override fillPreferencesWindow(
     window: Adw.PreferencesWindow & TracksSettings,
-  ): void {
+  ): Promise<void> {
     // Add our icons directory to the Gtk theme path, so that we're able to use
     // our icons in Adwaita widgets.
     const iconTheme = Gtk.IconTheme.get_for_display(window.get_display());
@@ -173,5 +173,7 @@ export default class UTCClockPreferences extends ExtensionPreferences {
 
     window.add(new ClockPage(settings));
     window.add(new AboutPage(this.metadata));
+
+    return Promise.resolve();
   }
 }
