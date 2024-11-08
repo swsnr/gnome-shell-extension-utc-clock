@@ -13,9 +13,3 @@ pot:
 		--join-existing --output=po/$(UUID).pot \
 		 --add-comments --keyword=_ --keyword=C_:1c,2 \
 		$(wildcard ui/*.blp)
-
-.PHONY: messages
-messages: $(CATALOGS)
-
-$(CATALOGS): %.po: pot
-	msgmerge --update --backup=none --lang=$(notdir $(basename $@)) $@ po/picture-of-the-day@swsnr.de.pot
