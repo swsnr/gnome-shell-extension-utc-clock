@@ -22,6 +22,12 @@ and install with
 $ gnome-extensions install utc-clock@swsnr.de.shell-extension.zip
 ```
 
+## Translations
+
+Help translate on [Codeberg Translate](https://translate.codeberg.org/engage/utc-clock-swsnr-de/):
+
+[![Translation status](https://translate.codeberg.org/widget/utc-clock-swsnr-de/utc-clock-swsnr-de/multi-auto.svg)](https://translate.codeberg.org/engage/utc-clock-swsnr-de/)
+
 ## License
 
 Copyright Sebastian Wiesner <sebastian@swsnr.de>
