@@ -1,5 +1,10 @@
 # UTC clock for GNOME shell
 
+[![Download on EGO](https://img.shields.io/badge/EGO-install-blue)](https://extensions.gnome.org/extension/6409/utc-clock/)
+[![Latest release](https://img.shields.io/github/v/release/swsnr/gnome-shell-extension-utc-clock)](https://github.com/swsnr/gnome-shell-extension-utc-clock/releases/)
+[![Translation status](https://translate.codeberg.org/widget/utc-clock-swsnr-de/utc-clock-swsnr-de/svg-badge.svg)](https://translate.codeberg.org/engage/utc-clock-swsnr-de/)
+[![CI status](https://img.shields.io/github/actions/workflow/status/swsnr/gnome-shell-extension-utc-clock/ci.yaml)](https://github.com/swsnr/gnome-shell-extension-utc-clock/actions)
+
 A GNOME Shell extension to add a UTC clock with fully customizable format to the panel.
 
 ![](./screenshot.png)
