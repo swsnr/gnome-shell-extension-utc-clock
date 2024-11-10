@@ -10,6 +10,7 @@
     "prepack": "pnpm run compile",
     "pack": "gsebuild pack",
     "check:types": "tsc --build tsconfig.types.json --force",
+    "xgettext": "gsebuild xgettext",
     "lint": "eslint .",
     "format": "prettier .",
     "clean": "rimraf --no-interactive dist build"
@@ -21,7 +22,7 @@
   "devDependencies": {
     "@girs/gjs": "4.0.0-beta.17",
     "@girs/gnome-shell": "47.0.0",
-    "@swsnr/gsebuild": "^0.0.5",
+    "@swsnr/gsebuild": "^0.0.7",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "glob": "^11.0.0",
@@ -30,6 +31,10 @@
     "typescript": "^5.6.3"
   },
   "gsebuild": {
+    "gettext": {
+      "sources": ["ui/*.blp"],
+      "copyright-holder": "Sebastian Wiesner <sebastian@swsnr.de>"
+    },
     "pack": {
       "copy-to-source": ["ui/*.ui"],
       "source-directory": "build",
@@ -38,10 +43,8 @@
         "ui",
         "../LICENSE*",
         "../README.md",
-        "../icons/",
-        "../metadata.json"
+        "../icons/"
       ],
-      "po-directory": "../po",
       "schemas": ["../schemas/*.gschema.xml"]
     }
   }

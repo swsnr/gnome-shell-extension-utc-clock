@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR Sebastian Wiesner <sebastian@swsnr.de>
+# This file is distributed under the same license as the utc-clock@swsnr.de package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: utc-clock@swsnr.de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-08 22:15+0100\n"
+"POT-Creation-Date: 2024-11-10 14:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,37 +17,37 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ui/AboutPage.blp:5 ui/AboutPage.blp:7
+#: ui/AboutPage.blp:7
 msgid "About"
 msgstr ""
 
-#: ui/AboutPage.blp:35 ui/AboutPage.blp:37
+#: ui/AboutPage.blp:37
 msgid "A completely customizable UTC clock for the top panel."
 msgstr ""
 
-#: ui/AboutPage.blp:44 ui/AboutPage.blp:46
+#: ui/AboutPage.blp:46
 msgctxt "about link"
 msgid "Github"
 msgstr ""
 
-#: ui/AboutPage.blp:49 ui/AboutPage.blp:51
+#: ui/AboutPage.blp:51
 msgctxt "about link"
 msgid "Issue tracker"
-msgstr ""
-
-#: ui/ClockPage.blp:5 ui/ClockPage.blp:7
-msgid "Clock"
-msgstr ""
-
-#: ui/ClockPage.blp:7 ui/ClockPage.blp:9
-msgid "Clock settings"
-msgstr ""
-
-#: ui/ClockPage.blp:11 ui/ClockPage.blp:13
-msgid "Format string"
 msgstr ""
 
 #: ui/AboutPage.blp:55
 msgctxt "about link"
 msgid "Translations"
+msgstr ""
+
+#: ui/ClockPage.blp:7
+msgid "Clock"
+msgstr ""
+
+#: ui/ClockPage.blp:9
+msgid "Clock settings"
+msgstr ""
+
+#: ui/ClockPage.blp:13
+msgid "Format string"
 msgstr ""
