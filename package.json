@@ -7,7 +7,7 @@
     "postblueprint": "git add ui",
     "compile": "tsc --build tsconfig.json",
     "postcompile": "eslint --no-config-lookup --config eslint.config.dist.js --quiet --fix .",
-    "prepack": "pnpm run compile",
+    "prepack": "npm run compile",
     "pack": "gsebuild pack",
     "check:types": "tsc --build tsconfig.types.json --force",
     "xgettext": "gsebuild xgettext",
@@ -16,11 +16,9 @@
     "clean": "rimraf --no-interactive dist build"
   },
   "engines": {
-    "node": ">=20",
-    "pnpm": "^9"
+    "node": ">=23"
   },
   "devDependencies": {
-    "@girs/gjs": "4.0.0-beta.17",
     "@girs/gnome-shell": "47.0.0",
     "@swsnr/gsebuild": "^0.0.7",
     "eslint": "^9.14.0",
